@@ -54,21 +54,3 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
-      - name: Extract Docker metadata
-        id: meta2
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.REGISTRY }}/otp-israel
-          tags: |
-            type=ref,event=tag
-            type=raw,value=dev
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: Dockerfile.otp
-          push: true
-          tags: ${{ steps.meta2.outputs.tags }}
-          labels: ${{ steps.meta2.outputs.labels }}
-          platforms: linux/amd64,linux/arm64

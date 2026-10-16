@@ -1,18 +1,5 @@
-FROM python:3.13-alpine as pipeline
+FROM ghcr.io/szaionz/gtfs-israel-pipeline as pipeline
 
-RUN adduser -D abc && mkdir /app /work /out && chown abc:abc /app /work /out && apk add supercronic
-
-USER abc
-
-
-COPY requirements.txt /app
-
-RUN pip install --no-cache -r /app/requirements.txt 
-COPY src/* /app
-
-WORKDIR /work
-
-RUN python3 /app/pipeline.py
 
 FROM debian:trixie as downloader
 RUN apt-get update && apt-get install -y curl && \

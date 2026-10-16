@@ -4,5 +4,6 @@ Process [publicly available GTFS data](https://a.com) for public transit navigat
 ## Quickstart
 Run the backend:
 ```bash
-docker run --rm -d -p 8080:8080 ghcr.io/szaionz/otp-israel
+docker build -t otp-israel --file Dockerfile.otp .
+docker run --rm -d -p 8080:8080 otp-israel
 ```
