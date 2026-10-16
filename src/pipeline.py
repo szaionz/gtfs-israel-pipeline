@@ -3,6 +3,15 @@ import zipfile
 import os
 import shutil
 
+RAIL=2
+
+def train_line_desc_to_short_name(s):
+    _, destination = s.split('<->')
+    station, _ = destination.split('-')
+    station = station.strip()
+    # if not station.startswith(city):
+    #     return f'{city} {station}'
+    return station
 
 def main():
     os.chdir('/work')
@@ -31,6 +40,7 @@ def main():
                 split_line = line.strip().split(',')
                 if not split_line[indices['parent_station']]:
                     split_line[indices['location_type']] = '0'
+                split_line[indices['stop_desc']]=split_line[indices['stop_code']]
                 g.write(f"{','.join(split_line)}\n")
                 lines=f.readlines(1)
                 
@@ -46,6 +56,8 @@ def main():
                 split_line = line.strip().split(',')
                 if split_line[indices['route_type']] in {'8', '715'}:
                     split_line[indices['route_type']] = '3'
+                if split_line[indices['route_type']]==str(RAIL):
+                    split_line[indices['route_short_name']]=train_line_desc_to_short_name(split_line[indices['route_long_name']])
                 g.write(f"{','.join(split_line)}\n")
                 lines=f.readlines(1)
     with open('gtfs_data/agency.txt', 'r') as f:
