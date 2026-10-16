@@ -53,7 +53,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
       - name: Extract Docker metadata
-        id: meta
+        id: meta2
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/otp-israel
@@ -67,6 +67,6 @@ jobs:
           context: .
           file: Dockerfile.otp
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta2.outputs.tags }}
+          labels: ${{ steps.meta2.outputs.labels }}
           platforms: linux/amd64,linux/arm64
