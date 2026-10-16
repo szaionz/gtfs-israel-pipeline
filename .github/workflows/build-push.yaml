@@ -17,7 +17,8 @@ jobs:
     permissions:
       contents: read
       packages: write
-    JAVA_OPTIONS: "-Xmx16G"
+    env:
+      JAVA_OPTIONS: "-Xmx16G"
 
     steps:
       - name: Checkout repository
