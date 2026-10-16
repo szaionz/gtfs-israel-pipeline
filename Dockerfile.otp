@@ -1,0 +1,27 @@
+FROM python:3.13-alpine as pipeline
+
+RUN adduser -D abc && mkdir /app /work /out && chown abc:abc /app /work /out && apk add supercronic
+
+USER abc
+
+
+COPY requirements.txt /app
+
+RUN pip install --no-cache -r /app/requirements.txt 
+COPY src/* /app
+
+WORKDIR /work
+
+RUN python3 /app/pipeline.py
+
+FROM debian:trixie as downloader
+RUN apt-get update && apt-get install -y curl && \
+curl -Lo /region.osm.pbf https://download.geofabrik.de/asia/israel-and-palestine-latest.osm.pbf
+
+
+FROM opentripplanner/opentripplanner:2.8.1
+COPY --from=pipeline /out/gtfs.zip /var/opentripplanner/gtfs.zip
+COPY --from=downloader /region.osm.pbf /var/opentripplanner/region.osm.pbf
+
+RUN /docker-entrypoint.sh --build --save
+ENTRYPOINT [ "/docker-entrypoint.sh", "--load", "--serve" ]
